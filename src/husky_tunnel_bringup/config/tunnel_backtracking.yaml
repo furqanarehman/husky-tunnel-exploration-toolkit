@@ -1,0 +1,47 @@
+tunnel_backtracking_explorer:
+  ros__parameters:
+    use_sim_time: true
+
+    map_topic: /map
+    costmap_topic: /global_costmap/costmap
+    navigate_to_pose_action_name: /navigate_to_pose
+    global_frame: map
+    robot_base_frame: base_link
+
+    # Re-evaluate all reachable frontiers after success, failure, or a dead end.
+    planning_period_s: 0.5
+    no_progress_timeout_s: 0.0
+    progress_epsilon_m: 0.05
+
+    # Accept narrow tunnel openings while ignoring tiny map speckles.
+    min_frontier_cells: 6
+    min_goal_distance_m: 1.0
+    goal_standoff_m: 2.0
+
+    # Only route through known free cells and low-cost Nav2 cells.
+    free_threshold: 20
+    maximum_cost: 40
+
+    # Prevent immediate retries at a closed or unreachable tunnel end.
+    blacklist_radius_m: 0.8
+    blacklist_timeout_s: 60.0
+    # Effectively never forget covered ground during a single mission,
+    # so the robot doesn't re-treat already-explored areas near home as new
+    # once return_to_start_on_complete triggers.
+    visited_timeout_s: 86400.0
+
+    # Persistent physical-coverage memory
+    coverage_enabled: true
+    coverage_resolution_m: 0.5
+    coverage_radius_m: 2.5
+    coverage_min_goal_distance_m: 3.0
+    coverage_goal_lookahead_m: 8.0
+    coverage_min_region_cells: 40
+
+    # Prefer large, distant branches while using reachable path distance.
+    path_distance_weight: 1.0
+    information_gain_weight: 0.5
+
+    # Require repeated empty scans before declaring coverage complete.
+    completion_confirmations: 20
+    return_to_start_on_complete: true

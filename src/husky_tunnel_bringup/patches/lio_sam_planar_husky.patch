@@ -1,0 +1,14 @@
+diff --git a/src/imageProjection.cpp b/src/imageProjection.cpp
+index eee1efb..2c43354 100644
+--- a/src/imageProjection.cpp
++++ b/src/imageProjection.cpp
+@@ -334,6 +334,9 @@ public:
+         }
+ 
+         imuDeskewInfo();
++        // Planar Husky simulation: reject erroneous IMU roll and pitch initialization.
++        cloudInfo.imu_roll_init = 0.0;
++        cloudInfo.imu_pitch_init = 0.0;
+ 
+         odomDeskewInfo();
+ 

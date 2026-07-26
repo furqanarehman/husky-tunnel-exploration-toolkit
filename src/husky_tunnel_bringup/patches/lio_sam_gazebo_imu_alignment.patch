@@ -1,0 +1,13 @@
+diff --git a/include/lio_sam/utility.hpp b/include/lio_sam/utility.hpp
+index 60e7b88..209dea8 100644
+--- a/include/lio_sam/utility.hpp
++++ b/include/lio_sam/utility.hpp
+@@ -328,7 +328,7 @@ public:
+         imu_out.angular_velocity.z = gyr.z();
+         // rotate roll pitch yaw
+         Eigen::Quaterniond q_from(imu_in.orientation.w, imu_in.orientation.x, imu_in.orientation.y, imu_in.orientation.z);
+-        Eigen::Quaterniond q_final = q_from * extQRPY;
++        Eigen::Quaterniond q_final = q_from;
+         imu_out.orientation.x = q_final.x();
+         imu_out.orientation.y = q_final.y();
+         imu_out.orientation.z = q_final.z();

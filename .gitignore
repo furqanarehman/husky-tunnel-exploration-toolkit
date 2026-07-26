@@ -1,21 +1,30 @@
-# The base simulation project is cloned automatically by scripts/setup.sh
-# into ./husky_ws -- it's its own separate git repository and should never
-# be tracked inside this one.
-husky_ws/
+/build/
+/install/
+/log/
 
-# Common ROS 2 / colcon build artifacts, in case anyone builds elsewhere
-build/
-install/
-log/
+/clearpath/platform/
+/clearpath/sensors/
+/clearpath/manipulators/
+/clearpath/robot.srdf
+/clearpath/robot.srdf.xacro
+/clearpath/robot.urdf.xacro
 
-# Python
+/frames_*.gv
+/frames_*.pdf
+/maps/
 __pycache__/
-*.pyc
+*:Zone.Identifier
+/clearpath/*.before_lio_rates
+/src/husky_tunnel_bringup/patches/lio_sam_failed_debug_experiment.patch
+/clearpath/*.before_*
+/src/husky_tunnel_bringup/config/*.before_*
+/src/husky_tunnel_bringup/worlds/*_backup.sdf
+/src/husky_tunnel_bringup/worlds/*_before_*.sdf
+/src/husky_tunnel_bringup/worlds/*_edit.sdf
+/src/husky_tunnel_bringup/worlds/*_test.sdf
 
-# Editor/OS clutter
+# Editor clutter (added for this repo's tooling)
 .vscode/
 *.swp
 .DS_Store
-
-# Windows "downloaded from internet" metadata files (WSL/Windows users)
-*:Zone.Identifier
+*.pyc

@@ -1,0 +1,237 @@
+<sdf version='1.9'>
+  <world name='tunnel'>
+    <plugin name='ignition::gazebo::systems::Physics' filename='libignition-gazebo-physics-system.so'/>
+    <plugin name='ignition::gazebo::systems::UserCommands' filename='libignition-gazebo-user-commands-system.so'/>
+    <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='libignition-gazebo-scene-broadcaster-system.so'/>
+    <plugin name='ignition::gazebo::systems::Sensors' filename='libignition-gazebo-sensors-system.so'>
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin name='ignition::gazebo::systems::Imu' filename='libignition-gazebo-imu-system.so'/>
+    <physics name='1ms' type='ode'>
+      <max_step_size>0.0040000000000000001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <scene>
+      <ambient>1 1 1 1</ambient>
+      <background>1 1 1 1</background>
+      <grid>false</grid>
+      <origin_visual>false</origin_visual>
+      <shadows>true</shadows>
+    </scene>
+    <atmosphere type='adiabatic'>
+      <temperature>288</temperature>
+      <temperature_gradient>0.29999999999999999</temperature_gradient>
+    </atmosphere>
+    <wind>
+      <linear_velocity>0 0 0</linear_velocity>
+    </wind>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/subt_tunnel_staging_area/11</uri>
+      <name>staging_area</name>
+      <pose>0 0 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_0_-1</name>
+      <pose>8 -11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_0_1</name>
+      <pose>8 11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_1_-1</name>
+      <pose>3.7 -11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_1_1</name>
+      <pose>3.7 11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_2_-1</name>
+      <pose>-0.6 -11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_2_1</name>
+      <pose>-0.6 11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_3_-1</name>
+      <pose>-4.9 -11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_3_1</name>
+      <pose>-4.9 11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_4_-1</name>
+      <pose>-9.2 -11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_4_1</name>
+      <pose>-9.2 11 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_-9.5_-2</name>
+      <pose>10.5 -8.6 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_-9.5_2</name>
+      <pose>10.5 8.6 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_-32_-2</name>
+      <pose>-12 -8.6 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_-32_-1</name>
+      <pose>-12 -4.3 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_-32_0</name>
+      <pose>-12 0 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_-32_1</name>
+      <pose>-12 4.3 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier/6</uri>
+      <name>barrier_-32_2</name>
+      <pose>-12 8.6 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Fiducial/4</uri>
+      <name>artifact_origin</name>
+      <pose>10 0 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 2/16</uri>
+      <name>tile_1</name>
+      <pose>40 40 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 5/14</uri>
+      <name>tile_2</name>
+      <pose>60 40 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Rescue Randy Sitting/8</uri>
+      <name>rescue_randy_1</name>
+      <pose>54 42.2 0.004 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 2/16</uri>
+      <name>tile_3</name>
+      <pose>80 40 0 0 -0 -1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 5/14</uri>
+      <name>tile_4</name>
+      <pose>40 20 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 5/14</uri>
+      <name>tile_5</name>
+      <pose>80 20 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 5/14</uri>
+      <name>tile_6</name>
+      <pose>20 0 0 0 0 -1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 1/5</uri>
+      <name>tile_7</name>
+      <pose>40 0 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Black and Decker Cordless Drill/6</uri>
+      <name>drill_1</name>
+      <pose>34 2 0.004 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 5/14</uri>
+      <name>tile_13</name>
+      <pose>40 -20 0 0 -0 -3.14159</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Fire Extinguisher/5</uri>
+      <name>extinguisher_1</name>
+      <pose>42 -25 0.004 0 -0 -1.0472</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 5/14</uri>
+      <name>tile_14</name>
+      <pose>80 -20 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 2/16</uri>
+      <name>tile_16</name>
+      <pose>40 -40 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 5/14</uri>
+      <name>tile_17</name>
+      <pose>60 -40 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 1/5</uri>
+      <name>tile_18</name>
+      <pose>80 -40 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile Blocker/12</uri>
+      <name>tile_19</name>
+      <pose>86 -40 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 2/16</uri>
+      <name>tile_21</name>
+      <pose>80 -60 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Samsung J8 Black/9</uri>
+      <name>phone_1</name>
+      <pose>117.8 -60 -4.996 -1.5708 0 0.785398</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 5/14</uri>
+      <name>tile_17_1</name>
+      <pose>60.0091 0.063928 0 0 -0 1.5708</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 1/5</uri>
+      <name>tile_18_1</name>
+      <pose>79.8099 -0.105497 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile Blocker/12</uri>
+      <name>tile_19_1</name>
+      <pose>91.4842 -60.4921 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile Blocker/12</uri>
+      <name>tile_19_2</name>
+      <pose>91.428 -0.368355 0 0 -0 0</pose>
+    </include>
+  </world>
+</sdf>
