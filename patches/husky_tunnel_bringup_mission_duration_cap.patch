@@ -1,0 +1,87 @@
+diff --git a/src/husky_tunnel_bringup/src/tunnel_backtracking_explorer.cpp b/src/husky_tunnel_bringup/src/tunnel_backtracking_explorer.cpp
+index 6868314..552e18f 100644
+--- a/src/husky_tunnel_bringup/src/tunnel_backtracking_explorer.cpp
++++ b/src/husky_tunnel_bringup/src/tunnel_backtracking_explorer.cpp
+@@ -58,6 +58,14 @@ public:
+     completion_confirmations_ = declare_parameter("completion_confirmations", 5);
+     return_to_start_on_complete_ =
+       declare_parameter("return_to_start_on_complete", true);
++    // Hard cap on total mission time. On a large map, coverage-based
++    // completion (no_frontier_cycles_ reaching completion_confirmations_)
++    // can legitimately take a very long time, or never quite happen if
++    // small leftover unvisited patches keep turning up. This forces a
++    // return home once the cap is hit, trading full-map completeness for
++    // a guaranteed, bounded runtime. Set to 0 to disable (old behavior).
++    max_mission_duration_s_ =
++      declare_parameter("max_mission_duration_s", 1800.0);
+ 
+     coverage_enabled_ = declare_parameter("coverage_enabled", true);
+     coverage_resolution_m_ = declare_parameter("coverage_resolution_m", 0.5);
+@@ -604,6 +612,24 @@ private:
+       return;
+     }
+ 
++    if (!mission_start_time_recorded_) {
++      mission_start_time_ = get_clock()->now();
++      mission_start_time_recorded_ = true;
++    }
++
++    if (max_mission_duration_s_ > 0.0 && !mission_deadline_exceeded_) {
++      const double mission_elapsed_s =
++        (get_clock()->now() - mission_start_time_).seconds();
++      if (mission_elapsed_s >= max_mission_duration_s_) {
++        mission_deadline_exceeded_ = true;
++        RCLCPP_WARN(
++          get_logger(),
++          "Max mission duration of %.0f s reached; abandoning further "
++          "exploration and returning home",
++          max_mission_duration_s_);
++      }
++    }
++
+     if (navigating_) {
+       if (goal_handle_ && last_progress_time_.nanoseconds() > 0) {
+         const double stalled_for = (get_clock()->now() - last_progress_time_).seconds();
+@@ -620,6 +646,20 @@ private:
+       return;
+     }
+ 
++    if (mission_deadline_exceeded_) {
++      // Never fall through to normal frontier/coverage exploration once
++      // the deadline has been hit -- only retry getting home, on a
++      // cooldown, so a rejected/canceled attempt doesn't immediately
++      // fight with a competing exploration goal.
++      const double since_last_attempt_s =
++        (get_clock()->now() - last_duration_cap_attempt_).seconds();
++      if (since_last_attempt_s >= duration_cap_retry_cooldown_s_) {
++        last_duration_cap_attempt_ = get_clock()->now();
++        send_home_goal();
++      }
++      return;
++    }
++
+     nav_msgs::msg::OccupancyGrid::SharedPtr map;
+     nav_msgs::msg::OccupancyGrid::SharedPtr costmap;
+     {
+@@ -901,6 +941,21 @@ private:
+   bool cancel_requested_{false};
+   bool returning_home_{false};
+   bool mission_finished_{false};
++  double max_mission_duration_s_{1800.0};
++  bool mission_start_time_recorded_{false};
++  rclcpp::Time mission_start_time_{0, 0, RCL_ROS_TIME};
++  // Permanent one-way switch: once the mission duration cap is hit, this
++  // stays true for the rest of the run. tick() checks this BEFORE ever
++  // reaching select_candidate()/send_goal(), so normal frontier/coverage
++  // exploration can never send a competing goal again -- previously,
++  // returning_home_ alone was used as the gate, but that gets reset to
++  // false by send_home_goal's own result callback on any non-success
++  // result (including being canceled/preempted), which let normal
++  // exploration slip back in and immediately preempt the next home
++  // attempt, causing an unbounded tug-of-war between the two goals.
++  bool mission_deadline_exceeded_{false};
++  rclcpp::Time last_duration_cap_attempt_{0, 0, RCL_ROS_TIME};
++  double duration_cap_retry_cooldown_s_{20.0};
+   bool home_pose_recorded_{false};
+   geometry_msgs::msg::Pose home_pose_;
+   int no_frontier_cycles_{0};

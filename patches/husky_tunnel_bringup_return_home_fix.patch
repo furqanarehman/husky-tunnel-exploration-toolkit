@@ -1,0 +1,25 @@
+diff --git a/src/husky_tunnel_bringup/config/tunnel_backtracking.yaml b/src/husky_tunnel_bringup/config/tunnel_backtracking.yaml
+index 6894931..37aea8a 100644
+--- a/src/husky_tunnel_bringup/config/tunnel_backtracking.yaml
++++ b/src/husky_tunnel_bringup/config/tunnel_backtracking.yaml
+@@ -14,7 +14,7 @@ tunnel_backtracking_explorer:
+     progress_epsilon_m: 0.05
+ 
+     # Accept narrow tunnel openings while ignoring tiny map speckles.
+-    min_frontier_cells: 3
++    min_frontier_cells: 6
+     min_goal_distance_m: 1.0
+     goal_standoff_m: 2.0
+ 
+@@ -25,7 +25,10 @@ tunnel_backtracking_explorer:
+     # Prevent immediate retries at a closed or unreachable tunnel end.
+     blacklist_radius_m: 0.8
+     blacklist_timeout_s: 60.0
+-    visited_timeout_s: 600.0
++    # Effectively never forget covered ground during a single mission,
++    # so the robot doesn't re-treat already-explored areas near home as new
++    # once return_to_start_on_complete triggers.
++    visited_timeout_s: 86400.0
+ 
+     # Persistent physical-coverage memory
+     coverage_enabled: true

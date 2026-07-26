@@ -1,0 +1,24 @@
+diff --git a/src/husky_tunnel_bringup/config/exploration_nav2.yaml b/src/husky_tunnel_bringup/config/exploration_nav2.yaml
+index 1f08877..468c39d 100644
+--- a/src/husky_tunnel_bringup/config/exploration_nav2.yaml
++++ b/src/husky_tunnel_bringup/config/exploration_nav2.yaml
+@@ -152,15 +152,15 @@ controller_server:
+       debug_trajectory_details: True
+       min_vel_x: 0.0
+       min_vel_y: 0.0
+-      max_vel_x: 0.60
++      max_vel_x: 0.90
+       max_vel_y: 0.0
+-      max_vel_theta: 0.80
++      max_vel_theta: 1.00
+       min_speed_xy: 0.0
+-      max_speed_xy: 0.60
++      max_speed_xy: 0.90
+       min_speed_theta: 0.15
+       # Add high threshold velocity for turtlebot 3 issue.
+       # https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/75
+-      acc_lim_x: 1.00
++      acc_lim_x: 1.30
+       acc_lim_y: 0.0
+       acc_lim_theta: 1.50
+       decel_lim_x: -1.00

@@ -1,0 +1,77 @@
+diff --git a/src/husky_tunnel_bringup/config/exploration_nav2.yaml b/src/husky_tunnel_bringup/config/exploration_nav2.yaml
+index 1f08877..9e059e7 100644
+--- a/src/husky_tunnel_bringup/config/exploration_nav2.yaml
++++ b/src/husky_tunnel_bringup/config/exploration_nav2.yaml
+@@ -54,7 +54,8 @@ bt_navigator:
+     odom_topic: /a200_0000/platform/odom
+     bt_loop_duration: 100
+     default_server_timeout: 2000
+-    default_nav_to_pose_bt_xml: /home/momo1/husky_ws/src/husky_tunnel_bringup/config/tunnel_no_spin_wait.xml
++    # default_nav_to_pose_bt_xml is injected at launch time by tunnel_navigation.launch.py
++    # (see param_substitutions) so this file stays portable across machines/usernames.
+     wait_for_service_timeout: 1000
+     # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
+     # nav2_bt_navigator/navigate_to_pose_w_replanning_and_recovery.xml
+@@ -134,7 +135,7 @@ controller_server:
+     progress_checker:
+       plugin: "nav2_controller::SimpleProgressChecker"
+       required_movement_radius: 0.02
+-      movement_time_allowance: 15.0
++      movement_time_allowance: 25.0
+     # Goal checker parameters
+     #precise_goal_checker:
+     #  plugin: "nav2_controller::SimpleGoalChecker"
+@@ -207,7 +208,7 @@ local_costmap:
+       inflation_layer:
+         plugin: "nav2_costmap_2d::InflationLayer"
+         cost_scaling_factor: 2.00
+-        inflation_radius: 1.00
++        inflation_radius: 0.60
+       voxel_layer:
+         plugin: "nav2_costmap_2d::VoxelLayer"
+         enabled: True
+@@ -266,7 +267,7 @@ global_costmap:
+       inflation_layer:
+         plugin: "nav2_costmap_2d::InflationLayer"
+         cost_scaling_factor: 2.00
+-        inflation_radius: 1.00
++        inflation_radius: 0.60
+       always_send_full_costmap: True
+ 
+ map_server:
+diff --git a/src/husky_tunnel_bringup/config/tunnel_no_spin_wait.xml b/src/husky_tunnel_bringup/config/tunnel_no_spin_wait.xml
+index 19b4233..39addcf 100644
+--- a/src/husky_tunnel_bringup/config/tunnel_no_spin_wait.xml
++++ b/src/husky_tunnel_bringup/config/tunnel_no_spin_wait.xml
+@@ -6,7 +6,7 @@
+ -->
+ <root main_tree_to_execute="MainTree">
+   <BehaviorTree ID="MainTree">
+-    <RecoveryNode number_of_retries="1" name="NavigateRecovery">
++    <RecoveryNode number_of_retries="3" name="NavigateRecovery">
+       <PipelineSequence name="NavigateWithReplanning">
+         <RateController hz="1.0">
+           <RecoveryNode number_of_retries="1" name="ComputePathToPose">
+@@ -27,6 +27,7 @@
+             <ClearEntireCostmap name="ClearGlobalCostmap-Subtree" service_name="global_costmap/clear_entirely_global_costmap"/>
+           </Sequence>
+           <BackUp backup_dist="0.30" backup_speed="0.05"/>
++          <DriveOnHeading dist_to_travel="0.30" speed="0.05"/>
+         </RoundRobin>
+       </ReactiveFallback>
+     </RecoveryNode>
+diff --git a/src/husky_tunnel_bringup/launch/tunnel_navigation.launch.py b/src/husky_tunnel_bringup/launch/tunnel_navigation.launch.py
+index c3094d0..0acb168 100644
+--- a/src/husky_tunnel_bringup/launch/tunnel_navigation.launch.py
++++ b/src/husky_tunnel_bringup/launch/tunnel_navigation.launch.py
+@@ -65,7 +65,9 @@ def generate_launch_description():
+     # Create our own temporary YAML files that include substitutions
+     param_substitutions = {
+         'use_sim_time': use_sim_time,
+-        'autostart': autostart}
++        'autostart': autostart,
++        'default_nav_to_pose_bt_xml': os.path.join(
++            bringup_dir, 'config', 'tunnel_no_spin_wait.xml')}
+ 
+     configured_params = ParameterFile(
+         RewrittenYaml(
