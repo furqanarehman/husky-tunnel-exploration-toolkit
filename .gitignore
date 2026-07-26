@@ -1,0 +1,21 @@
+# The base simulation project is cloned automatically by scripts/setup.sh
+# into ./husky_ws -- it's its own separate git repository and should never
+# be tracked inside this one.
+husky_ws/
+
+# Common ROS 2 / colcon build artifacts, in case anyone builds elsewhere
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor/OS clutter
+.vscode/
+*.swp
+.DS_Store
+
+# Windows "downloaded from internet" metadata files (WSL/Windows users)
+*:Zone.Identifier

@@ -35,36 +35,25 @@ This repo exists so nobody else has to rediscover any of it.
 - ROS 2 Humble Desktop
 - Git
 
-### 2. Clone the base project
+### 2. Clone this repo and run setup — that's it
 ```bash
-git clone --branch feature/autonomous-exploration --single-branch \
-  --recurse-submodules \
-  https://github.com/mohamadalquraan99-arch/husky-lio-sam-tunnel-inspection.git \
-  husky_ws
-cd husky_ws
+git clone https://github.com/furqanarehman/husky-tunnel-exploration-toolkit.git
+cd husky-tunnel-exploration-toolkit
+chmod +x scripts/setup.sh
+./scripts/setup.sh
 ```
+This single script clones the base simulation project into `./husky_ws` inside this repo,
+fixes a known install-script bug, installs all dependencies via Clearpath's official apt
+repository, applies all 5 patches, and builds the workspace. No separate manual clone
+step, no manually copying patch files around. See
+[`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) if anything here fails — it's very
+likely already documented with a fix.
 
-### 3. Clone this repo alongside it
-```bash
-cd ..
-git clone <this-repo-url> husky-exploration-toolkit
-```
-
-### 4. Run the fixed setup script
-```bash
-cd husky_ws
-chmod +x ../husky-exploration-toolkit/scripts/setup.sh
-../husky-exploration-toolkit/scripts/setup.sh
-```
-This installs dependencies via Clearpath's official apt repository, applies all 5 patches,
-and builds the workspace. See [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) if
-anything here fails — it's very likely already documented with a fix.
-
-### 5. Launch
+### 3. Launch
 ```bash
 export LIBGL_ALWAYS_SOFTWARE=1
 source /opt/ros/humble/setup.bash
-source install/setup.bash
+source husky_ws/install/setup.bash
 
 ros2 launch husky_tunnel_bringup tunnel_backtracking_exploration.launch.py
 ```
@@ -72,9 +61,9 @@ The `LIBGL_ALWAYS_SOFTWARE=1` line matters — see
 [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md#gazebo-gui-crash) if you skip it and
 Gazebo's GUI crashes.
 
-### 6. Use the evaluation tools
+### 4. Use the evaluation tools
 ```bash
-python3 ../husky-exploration-toolkit/tools/nav_success_rate.py your_run_log.txt
+python3 tools/nav_success_rate.py your_run_log.txt
 ```
 See [`tools/README.md`](tools/README.md) for all five tools and their usage.
 

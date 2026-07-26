@@ -2,57 +2,66 @@
 #
 # setup.sh
 #
-# Robust setup for husky_ws (the feature/autonomous-exploration base project),
-# applying every fix documented in docs/TROUBLESHOOTING.md and
-# docs/PROGRESS_LOG.md automatically.
+# One-command setup: clones the base simulation project, applies every fix
+# documented in docs/TROUBLESHOOTING.md and docs/PROGRESS_LOG.md, and
+# builds the workspace. Run this from anywhere inside this repo -- it
+# figures out its own location.
 #
-# Run this FROM the husky_ws directory (the base project you cloned), e.g.:
-#
-#   cd husky_ws
-#   ../husky-exploration-toolkit/scripts/setup.sh
+#   git clone https://github.com/furqanarehman/husky-tunnel-exploration-toolkit.git
+#   cd husky-tunnel-exploration-toolkit
+#   ./scripts/setup.sh
 #
 # What this does:
-#   1. Sanity-checks you're running it from the right place
+#   1. Clones the base project (feature/autonomous-exploration branch) into
+#      ./husky_ws inside this repo, if not already present
 #   2. Fixes the base project's install_dependencies.sh strict-mode bug
 #      (set -euo pipefail conflicting with ROS 2's own setup.bash)
 #   3. Runs the (now fixed) install script
 #   4. Applies all 5 patches from this repo's patches/ folder
 #   5. Builds the workspace
 #
-# Safe to re-run -- patches are checked before applying, and the build step
-# is idempotent.
+# Safe to re-run -- the clone step is skipped if husky_ws already exists,
+# patches are checked before applying, and the build step is idempotent.
 
 set -eo pipefail  # deliberately NOT -u, matching the fix in TROUBLESHOOTING.md
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOOLKIT_DIR="$(dirname "$SCRIPT_DIR")"
 PATCHES_DIR="$TOOLKIT_DIR/patches"
+WS_DIR="$TOOLKIT_DIR/husky_ws"
+
+BASE_REPO_URL="https://github.com/mohamadalquraan99-arch/husky-lio-sam-tunnel-inspection.git"
+BASE_REPO_BRANCH="feature/autonomous-exploration"
 
 echo "=== Husky Tunnel Exploration Toolkit — Setup ==="
 echo ""
-
-# --- 1. Sanity check ---------------------------------------------------
-if [ ! -f "src/husky_tunnel_bringup/package.xml" ]; then
-    echo "ERROR: This doesn't look like the husky_ws base project directory."
-    echo "  Expected to find: src/husky_tunnel_bringup/package.xml"
-    echo "  Run this script FROM your husky_ws directory, e.g.:"
-    echo "    cd husky_ws && ${BASH_SOURCE[0]}"
-    exit 1
-fi
-
-if [ ! -d "$PATCHES_DIR" ]; then
-    echo "ERROR: Could not find patches/ directory at $PATCHES_DIR"
-    echo "  Make sure this toolkit repo is cloned alongside husky_ws, and"
-    echo "  that you're running this script from its scripts/ subfolder."
-    exit 1
-fi
-
-echo "Base project directory: $(pwd)"
-echo "Toolkit directory:      $TOOLKIT_DIR"
+echo "Toolkit directory: $TOOLKIT_DIR"
+echo "Workspace will be: $WS_DIR"
 echo ""
+
+# --- 1. Clone the base project if not already present -------------------
+if [ -d "$WS_DIR/src/husky_tunnel_bringup" ]; then
+    echo "--- Base project already present at $WS_DIR -- skipping clone ---"
+else
+    echo "--- Cloning base project ($BASE_REPO_BRANCH) into $WS_DIR ---"
+    git clone --branch "$BASE_REPO_BRANCH" --single-branch \
+        --recurse-submodules \
+        "$BASE_REPO_URL" \
+        "$WS_DIR"
+fi
+
+cd "$WS_DIR"
+
+if [ ! -f "src/husky_tunnel_bringup/package.xml" ]; then
+    echo "ERROR: Clone succeeded but src/husky_tunnel_bringup/package.xml"
+    echo "  is missing. The base project's structure may have changed."
+    echo "  See docs/TROUBLESHOOTING.md, or open an issue in this repo."
+    exit 1
+fi
 
 # --- 2. Fix and run the base project's install script -------------------
 if [ -f "scripts/install_dependencies.sh" ]; then
+    echo ""
     echo "--- Fixing known strict-mode bug in install_dependencies.sh ---"
     if grep -q "set -euo pipefail" scripts/install_dependencies.sh; then
         sed -i 's/set -euo pipefail/set -eo pipefail/' scripts/install_dependencies.sh
@@ -106,7 +115,7 @@ for patch_name in "${PATCH_ORDER[@]}"; do
         echo "           nor already-applied). It may conflict with local"
         echo "           changes, or the base project may have changed since"
         echo "           this patch was written. Apply manually if needed:"
-        echo "             git apply --check $patch_path"
+        echo "             cd $WS_DIR && git apply --check $patch_path"
     fi
 done
 
@@ -122,7 +131,7 @@ echo ""
 echo "To launch:"
 echo "  export LIBGL_ALWAYS_SOFTWARE=1"
 echo "  source /opt/ros/humble/setup.bash"
-echo "  source install/setup.bash"
+echo "  source $WS_DIR/install/setup.bash"
 echo "  ros2 launch husky_tunnel_bringup tunnel_backtracking_exploration.launch.py"
 echo ""
-echo "If anything went wrong, check docs/TROUBLESHOOTING.md in this toolkit repo."
+echo "If anything went wrong, check docs/TROUBLESHOOTING.md in this repo."
